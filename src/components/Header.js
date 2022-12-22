@@ -1,6 +1,7 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
-const Header = () => {
+const Header = ({ active, setActive }) => {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid bg-faded padding-media">
@@ -23,14 +24,61 @@ const Header = () => {
               className="navbar-nav me-auto mb-2 mb-lg-0"
               id="navbarSupportedContent"
             >
-              <li className="nav-item nav-link">Home</li>
-              <li className="nav-item nav-link">Create</li>
-              <li className="nav-item nav-link">About</li>
+              <Link to="/" exact style={{ textDecoration: "none" }}>
+                <li
+                  className={`nav-item nav-link ${
+                    active === "home" ? "active" : ""
+                  }`}
+                  onClick={() => setActive("home")}
+                >
+                  Home
+                </li>
+              </Link>
+
+              <Link to="/create" style={{ textDecoration: "none" }}>
+                <li
+                  className={`nav-item nav-link ${
+                    active === "create" ? "active" : ""
+                  }`}
+                  onClick={() => setActive("create")}
+                >
+                  Create
+                </li>
+              </Link>
+
+              <Link to="/about" style={{ textDecoration: "none" }}>
+                <li
+                  className={`nav-item nav-link ${
+                    active === "about" ? "active" : ""
+                  }`}
+                  onClick={() => setActive("about")}
+                >
+                  About
+                </li>
+              </Link>
             </ul>
             <div className="row g-3">
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                <li className="nav-item nav-link">Login</li>
-                <li className="nav-item nav-link">Logout</li>
+                <Link to="/login" style={{ textDecoration: "none" }}>
+                  <li
+                    className={`nav-item nav-link ${
+                      active === "login" ? "active" : ""
+                    }`}
+                    onClick={() => setActive("login")}
+                  >
+                    Login
+                  </li>
+                </Link>
+                <Link to="/logout" style={{ textDecoration: "none" }}>
+                  <li
+                    className={`nav-item nav-link ${
+                      active === "logout" ? "active" : ""
+                    }`}
+                    onClick={() => setActive("logout")}
+                  >
+                    Logout
+                  </li>
+                </Link>
               </ul>
             </div>
           </div>
