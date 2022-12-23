@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import ReactTagInput from "@pathofdev/react-tag-input";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { storage } from "../firebase";
+
 import "@pathofdev/react-tag-input/build/index.css";
 
 const initialState = {
@@ -22,6 +25,43 @@ const categoryOptions = [
 const AddEditBlog = () => {
   const [form, setForm] = useState(initialState);
   const [file, setFile] = useState(null);
+  const [progress, setProgress] = useState(null);
+
+  useEffect(() => {
+    const uploadFile = () => {
+      const storageRef = ref(storage, file.name);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setProgress(progress);
+          console.log("Upload is " + progress + "% done.");
+          switch (snapshot.state) {
+            case "paused":
+              console.log("Upload is paused");
+              break;
+            case "running":
+              console.log("Upload is running");
+              break;
+            default:
+              break;
+          }
+        },
+        (error) => {
+          console.log(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
+            setForm((prev) => ({ ...prev, imgUrl: downloadUrl }));
+          });
+        }
+      );
+    };
+    file && uploadFile();
+  }, [file]);
 
   const { title, tags, category, trending, description } = form;
 
@@ -118,7 +158,11 @@ const AddEditBlog = () => {
                 />
               </div>
               <div className="col-12 py-3 text-center">
-                <button className="btn btn-add" type="submit">
+                <button
+                  className="btn btn-add"
+                  type="submit"
+                  disabled={progress !== null && progress < 100}
+                >
                   Submit
                 </button>
               </div>
