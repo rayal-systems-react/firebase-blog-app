@@ -1,5 +1,5 @@
 import "./App.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Home from "./pages/Home";
 import { Routes, Route } from "react-router-dom";
@@ -16,12 +16,25 @@ import Header from "./components/Header";
 import "./style.scss";
 import "./media-query.css";
 import Auth from "./pages/Auth";
+import { auth } from "./firebase";
 
 function App() {
   const [active, setActive] = useState("home");
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    auth.onAuthStateChanged((authUser) => {
+      if (authUser) {
+        setUser(authUser);
+      } else {
+        setUser(null);
+      }
+    });
+  });
+
   return (
     <div className="App">
-      <Header setActive={setActive} active={active} />
+      <Header setActive={setActive} active={active} user={user} />
       <ToastContainer position="top-center" />
       <Routes>
         <Route path="/" element={<Home />} />
