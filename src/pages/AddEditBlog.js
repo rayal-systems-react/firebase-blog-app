@@ -40,7 +40,6 @@ const navigate = useNavigate();
           const progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           setProgress(progress);
-          console.log("Upload is " + progress + "% done.");
           switch (snapshot.state) {
             case "paused":
               console.log("Upload is paused");
