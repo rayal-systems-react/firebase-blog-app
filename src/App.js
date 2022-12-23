@@ -15,6 +15,7 @@ import Header from "./components/Header";
 
 import "./style.scss";
 import "./media-query.css";
+import Auth from "./pages/Auth";
 
 function App() {
   const [active, setActive] = useState("home");
@@ -28,6 +29,7 @@ function App() {
         <Route path="/create" element={<AddEditBlog />} />
         <Route path="/update/:id" element={<AddEditBlog />} />
         <Route path="/about" element={<About />} />
+        <Route path="/auth" element={<Auth />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>

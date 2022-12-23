@@ -59,7 +59,7 @@ const Header = ({ active, setActive }) => {
             </ul>
             <div className="row g-3">
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                <Link to="/login" style={{ textDecoration: "none" }}>
+                <Link to="/auth" style={{ textDecoration: "none" }}>
                   <li
                     className={`nav-item nav-link ${
                       active === "login" ? "active" : ""
