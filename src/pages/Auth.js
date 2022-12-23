@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 
 const initialState = {
+  firstName: "",
+  lastName: "",
   email: "",
   password: "",
+  confirmPassword: "",
 };
 
 function Auth() {
   const [state, setState] = useState(initialState);
   const [signUp, setSignUp] = useState(false);
 
-  const { email, password } = state;
+  const { email, password, firstName, lastName, confirmPassword } = state;
 
   const handleChange = (e) => {
     setState({ ...state, [e.target.name]: e.target.value });
@@ -26,6 +29,31 @@ function Auth() {
         <div className="row h-100 justify-content-center align-item-center">
           <div className="col-10 col-md-8 col-lg-6">
             <form className="row">
+              {signUp && (
+                <>
+                  <div className="col-6 py-3">
+                    <input
+                      type="text"
+                      className="form-control input-text-box"
+                      placeholder="First Name"
+                      name="firstName"
+                      value={firstName}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="col-6 py-3">
+                    <input
+                      type="text"
+                      className="form-control input-text-box"
+                      placeholder="Last Name"
+                      name="lastName"
+                      value={lastName}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </>
+              )}
+
               <div className="col-12 py-3">
                 <input
                   type="email"
@@ -46,6 +74,19 @@ function Auth() {
                   onChange={handleChange}
                 />
               </div>
+              {signUp && (
+                <div className="col-12 py-3">
+                  <input
+                    type="password"
+                    className="form-control input-text-box"
+                    placeholder="Confirm Password"
+                    name="confirmPassword"
+                    value={confirmPassword}
+                    onChange={handleChange}
+                  />
+                </div>
+              )}
+
               <div className="col-12 py-3 text-center">
                 <button
                   className={`btn ${!signUp ? "btn-sign-in" : "btn-sign-up"}`}
@@ -75,7 +116,7 @@ function Auth() {
                 <>
                   <div className="text-center justify-content-center mt-2 pt-2">
                     <p className="small fw-bold mt-2 pt-1 mb-0">
-                      Already have an account?
+                      Already have an account? &nbsp;
                       <span
                         style={{
                           textDecoration: "none",
