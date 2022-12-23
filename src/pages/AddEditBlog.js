@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import ReactTagInput from "@pathofdev/react-tag-input";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { storage } from "../firebase";
-
+import { db, storage } from "../firebase";
 import "@pathofdev/react-tag-input/build/index.css";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 
 const initialState = {
   title: "",
@@ -22,10 +23,11 @@ const categoryOptions = [
   "Business",
 ];
 
-const AddEditBlog = () => {
+const AddEditBlog = ({ user }) => {
   const [form, setForm] = useState(initialState);
   const [file, setFile] = useState(null);
   const [progress, setProgress] = useState(null);
+const navigate = useNavigate();
 
   useEffect(() => {
     const uploadFile = () => {
@@ -65,13 +67,38 @@ const AddEditBlog = () => {
 
   const { title, tags, category, trending, description } = form;
 
-  const handleChange = (e) => {};
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
-  const handleTags = (e) => {};
+  const handleTags = (tags) => {
+    setForm({ ...form, tags });
+  };
 
-  const handleTrending = (e) => {};
+  const handleTrending = (e) => {
+    setForm({ ...form, trending: e.target.value });
+  };
 
-  const onCategoryChange = () => {};
+  const onCategoryChange = (e) => {
+    setForm({ ...form, category: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (category && tags && title && file && description && trending) {
+      try {
+        await addDoc(collection(db, "blogs"), {
+          ...form,
+          timestamp: serverTimestamp(),
+          author: user.displayName,
+          userId: user.uid,
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    navigate("/");
+  };
 
   return (
     <div className="container-fluid mb-4">
@@ -81,7 +108,7 @@ const AddEditBlog = () => {
         </div>
         <div className="row h-100 justify-content-center align-items-center">
           <div className="col-10 col-md-8 col-lg-6">
-            <form className="row blog-form">
+            <form className="row blog-form" onSubmit={handleSubmit}>
               <div className="col-12 py-3">
                 <input
                   type="text"
