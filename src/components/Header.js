@@ -24,7 +24,7 @@ const Header = ({ active, setActive }) => {
               className="navbar-nav me-auto mb-2 mb-lg-0"
               id="navbarSupportedContent"
             >
-              <Link to="/" exact style={{ textDecoration: "none" }}>
+              <Link to="/" style={{ textDecoration: "none" }}>
                 <li
                   className={`nav-item nav-link ${
                     active === "home" ? "active" : ""

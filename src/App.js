@@ -22,14 +22,14 @@ function App() {
   return (
     <div className="App">
       <Header setActive={setActive} active={active} />
-      <ToastContainer />
+      <ToastContainer position="top-center" />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/detail/:id" element={<Detail />} />
         <Route path="/create" element={<AddEditBlog />} />
         <Route path="/update/:id" element={<AddEditBlog />} />
         <Route path="/about" element={<About />} />
-        <Route path="/auth" element={<Auth />} />
+        <Route path="/auth" element={<Auth setActive={setActive} />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>

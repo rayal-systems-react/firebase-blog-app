@@ -1,4 +1,8 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { auth } from "../firebase";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { toast } from "react-toastify";
 
 const initialState = {
   firstName: "",
@@ -8,14 +12,38 @@ const initialState = {
   confirmPassword: "",
 };
 
-function Auth() {
+function Auth({ setActive }) {
   const [state, setState] = useState(initialState);
   const [signUp, setSignUp] = useState(false);
 
   const { email, password, firstName, lastName, confirmPassword } = state;
 
+  const naivgate = useNavigate();
+
   const handleChange = (e) => {
     setState({ ...state, [e.target.name]: e.target.value });
+  };
+
+  const handleAuth = async (e) => {
+    e.preventDefault();
+    if (!signUp) {
+    } else {
+      if (password !== confirmPassword) {
+        return toast.error("Password do not match");
+      }
+      if (firstName && lastName && email && password) {
+        const { user } = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        await updateProfile(user, { displayName: `${firstName} ${lastName}` });
+        setActive("home");
+      } else {
+        return toast.error("All fields are mandatory to fill.");
+      }
+    }
+    naivgate("/");
   };
 
   return (
@@ -28,7 +56,7 @@ function Auth() {
         </div>
         <div className="row h-100 justify-content-center align-item-center">
           <div className="col-10 col-md-8 col-lg-6">
-            <form className="row">
+            <form className="row" onSubmit={handleAuth}>
               {signUp && (
                 <>
                   <div className="col-6 py-3">
