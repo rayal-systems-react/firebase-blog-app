@@ -2,7 +2,7 @@ import "./App.css";
 import { useState, useEffect } from "react";
 
 import Home from "./pages/Home";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -18,6 +18,7 @@ import "./media-query.css";
 import Auth from "./pages/Auth";
 import { auth } from "./firebase";
 import { signOut } from "firebase/auth";
+import userEvent from "@testing-library/user-event";
 
 function App() {
   const [active, setActive] = useState("home");
@@ -54,8 +55,14 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/detail/:id" element={<Detail />} />
-        <Route path="/create" element={<AddEditBlog user={user} />} />
-        <Route path="/update/:id" element={<AddEditBlog user={user} />} />
+        <Route
+          path="/create"
+          element={user?.uid ? <AddEditBlog user={user} /> : <Navigate to="/auth" />}
+        />
+        <Route
+          path="/update/:id"
+          element={user?.uid ? <AddEditBlog user={user} /> : <Navigate to="/auth" />}
+        />
         <Route path="/about" element={<About />} />
         <Route path="/auth" element={<Auth setActive={setActive} />} />
         <Route path="*" element={<NotFound />} />
