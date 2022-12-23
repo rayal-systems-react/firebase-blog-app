@@ -1,10 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Header = ({ active, setActive, user }) => {
+const Header = ({ active, setActive, user, handleLogout }) => {
   const userId = user?.uid;
-  console.log("userId", userId);
-  console.log("name", user?.displayName);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -80,7 +78,9 @@ const Header = ({ active, setActive, user }) => {
                     <p style={{ marginTop: "12px", marginLeft: "5px" }}>
                       {user?.displayName}
                     </p>
-                    <li className="nav-item nav-link">Logout</li>
+                    <li className="nav-item nav-link" onClick={handleLogout}>
+                      Logout
+                    </li>
                   </>
                 ) : (
                   <Link to="/auth" style={{ textDecoration: "none" }}>
