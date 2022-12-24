@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import BlogSection from "../components/BlogSection";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, deleteDoc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
+import { doc } from "firebase/firestore";
+
 import Spinner from "../components/Spinner";
 
-const Home = ({setActive, user}) => {
+const Home = ({ setActive, user }) => {
   const [loading, setLoading] = useState(true);
   const [blogs, setBlogs] = useState([]);
 
@@ -18,7 +20,7 @@ const Home = ({setActive, user}) => {
         });
         setBlogs(list);
         setLoading(false);
-        setActive('home');
+        setActive("home");
       },
       (error) => {
         console.log(error);
@@ -33,13 +35,25 @@ const Home = ({setActive, user}) => {
     return <Spinner />;
   }
 
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this blog")) {
+      try {
+        setLoading(true);
+        await deleteDoc(doc(db, "blogs", id));
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
   return (
     <div className="container-fluid pb-4 pt-4 padding">
       <div className="container padding">
         <div className="row mx-0">
           <h2>Trending</h2>
           <div className="col-md-8">
-            <BlogSection blogs={blogs} user={user} />
+            <BlogSection blogs={blogs} user={user} handleDelet={handleDelete} />
           </div>
           <div className="col-md-3">
             <h2>Tags</h2>
