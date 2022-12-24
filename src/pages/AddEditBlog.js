@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ReactTagInput from "@pathofdev/react-tag-input";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { db, storage } from "../firebase";
 import "@pathofdev/react-tag-input/build/index.css";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  serverTimestamp,
+} from "firebase/firestore";
 
 const initialState = {
   title: "",
@@ -23,11 +29,12 @@ const categoryOptions = [
   "Business",
 ];
 
-const AddEditBlog = ({ user }) => {
+const AddEditBlog = ({ user, setActive }) => {
   const [form, setForm] = useState(initialState);
   const [file, setFile] = useState(null);
   const [progress, setProgress] = useState(null);
-const navigate = useNavigate();
+  const navigate = useNavigate();
+  const { id } = useParams();
 
   useEffect(() => {
     const uploadFile = () => {
@@ -63,6 +70,19 @@ const navigate = useNavigate();
     };
     file && uploadFile();
   }, [file]);
+
+  useEffect(() => {
+    id && getBlogDetail();
+  }, [id]);
+
+  const getBlogDetail = async () => {
+    const docRef = doc(db, "blogs", id);
+    const snapshot = await getDoc(docRef);
+    if (snapshot.exists()) {
+      setForm({ ...snapshot.data() });
+    }
+    setActive(null);
+  };
 
   const { title, tags, category, trending, description } = form;
 
@@ -103,7 +123,9 @@ const navigate = useNavigate();
     <div className="container-fluid mb-4">
       <div className="container">
         <div className="col-12">
-          <div className="text-center heading py-2">Create Blog</div>
+          <div className="text-center heading py-2">
+            {id ? "Update Blog" : "Create Blog"}
+          </div>
         </div>
         <div className="row h-100 justify-content-center align-items-center">
           <div className="col-10 col-md-8 col-lg-6">
@@ -189,7 +211,7 @@ const navigate = useNavigate();
                   type="submit"
                   disabled={progress !== null && progress < 100}
                 >
-                  Submit
+                  {id ? "Update" : "Submit"}
                 </button>
               </div>
             </form>

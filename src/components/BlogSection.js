@@ -35,18 +35,29 @@ const BlogSection = ({ blogs, user, handleDelete }) => {
               <button className="btn btn-read">Read More</button>
             </Link>
             {user?.uid && item.userId === user?.uid && (
+              // <div style={{ float: "right" }}>
+              //   <FontAwesome
+              //     name="trash"
+              //     style={{ margin: "15px", cursor: "pointer" }}
+              //     size="2x"
+              //     onClick={() => handleDelete(item.id)}
+              //   />
+              //   <FontAwesome
+              //     name="edit"
+              //     style={{ cursor: "pointer" }}
+              //     size="2x"
+              //   />
+              // </div>
               <div style={{ float: "right" }}>
-                <FontAwesome
-                  name="trash"
-                  style={{ margin: "15px", cursor: "pointer" }}
-                  size="2x"
+                <button
+                  className="btn btn-danger btn-sm m-2"
                   onClick={() => handleDelete(item.id)}
-                />
-                <FontAwesome
-                  name="edit"
-                  style={{ cursor: "pointer" }}
-                  size="2x"
-                />
+                >
+                  Delete
+                </button>
+                <Link to={`/update/${item?.id}`}>
+                  <span className="btn btn-success btn-sm">Update</span>
+                </Link>
               </div>
             )}
           </div>

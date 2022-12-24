@@ -53,7 +53,7 @@ const Home = ({ setActive, user }) => {
         <div className="row mx-0">
           <h2>Trending</h2>
           <div className="col-md-8">
-            <BlogSection blogs={blogs} user={user} handleDelet={handleDelete} />
+            <BlogSection blogs={blogs} user={user} handleDelete={handleDelete} />
           </div>
           <div className="col-md-3">
             <h2>Tags</h2>
