@@ -3,6 +3,7 @@ import BlogSection from "../components/BlogSection";
 import { collection, deleteDoc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
 import { doc } from "firebase/firestore";
+import { toast } from "react-toastify";
 
 import Spinner from "../components/Spinner";
 
@@ -41,6 +42,7 @@ const Home = ({ setActive, user }) => {
         setLoading(true);
         await deleteDoc(doc(db, "blogs", id));
         setLoading(false);
+        toast.info("Blog deleted successfully!");
       } catch (error) {
         console.log(error);
       }
@@ -53,7 +55,11 @@ const Home = ({ setActive, user }) => {
         <div className="row mx-0">
           <h2>Trending</h2>
           <div className="col-md-8">
-            <BlogSection blogs={blogs} user={user} handleDelete={handleDelete} />
+            <BlogSection
+              blogs={blogs}
+              user={user}
+              handleDelete={handleDelete}
+            />
           </div>
           <div className="col-md-3">
             <h2>Tags</h2>

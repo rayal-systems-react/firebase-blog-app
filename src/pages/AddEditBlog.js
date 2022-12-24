@@ -4,12 +4,14 @@ import ReactTagInput from "@pathofdev/react-tag-input";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { db, storage } from "../firebase";
 import "@pathofdev/react-tag-input/build/index.css";
+import { toast } from "react-toastify";
 import {
   addDoc,
   collection,
   doc,
   getDoc,
   serverTimestamp,
+  updateDoc,
 } from "firebase/firestore";
 
 const initialState = {
@@ -63,6 +65,7 @@ const AddEditBlog = ({ user, setActive }) => {
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
+            toast.info("Image is uploaded successfully to firebase!");
             setForm((prev) => ({ ...prev, imgUrl: downloadUrl }));
           });
         }
@@ -105,16 +108,33 @@ const AddEditBlog = ({ user, setActive }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (category && tags && title && file && description && trending) {
-      try {
-        await addDoc(collection(db, "blogs"), {
-          ...form,
-          timestamp: serverTimestamp(),
-          author: user.displayName,
-          userId: user.uid,
-        });
-      } catch (err) {
-        console.log(err);
+      if (!id) {
+        try {
+          await addDoc(collection(db, "blogs"), {
+            ...form,
+            timestamp: serverTimestamp(),
+            author: user.displayName,
+            userId: user.uid,
+          });
+          toast.success("Blog created successfully!");
+        } catch (err) {
+          console.log(err);
+        }
+      } else {
+        try {
+          await updateDoc(doc(db, "blogs", id), {
+            ...form,
+            timestamp: serverTimestamp(),
+            author: user.displayName,
+            userId: user.uid,
+          });
+          toast.success("Blog Updated successfully!");
+        } catch (err) {
+          console.log(err);
+        }
       }
+    } else {
+      return toast.error("All fields are mandatory");
     }
     navigate("/");
   };
