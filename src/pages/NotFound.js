@@ -1,9 +1,11 @@
-import React from 'react'
+import React from "react";
 
-function NotFound() {
+const NotFound = () => {
   return (
-    <div>NotFound</div>
-  )
-}
+    <div>
+      <img src="/images/404-NotFound.jpg" alt="page not found" />
+    </div>
+  );
+};
 
-export default NotFound
+export default NotFound;
